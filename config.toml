@@ -1,11 +1,11 @@
-baseurl = "http://marcio.io"
+baseurl = "http://rafaelcapucho.com"
 languageCode = "en-us"
-title = "marcio.io"
+title = "rafaelcapucho.com"
 theme = "hyde"
-copyright = "Marcio Castilho"
+copyright = "Rafael Capucho"
 
 [Author]
-	name = "Marcio Castilho"
+	name = "Rafael Capucho"
 
 [Permalinks]
 	blog = "/:year/:month/:filename/"
@@ -17,9 +17,9 @@ copyright = "Marcio Castilho"
 	series-desc = "series-desc"
 
 [params]
-	description = "stuff by Marcio Castilho"
-	linkedin = "https://www.linkedin.com/in/mcastilho"
-	facebook = "https://www.facebook.com/mcastilho"
-	twitter = "https://twitter.com/mcastilho"
-	github = "https://github.com/mcastilho"
-	disqus = "marciocastilho"
+	description = "stuff by Rafael Capucho"
+	linkedin = "https://linkedin.com/in/rafaelcapucho"
+	facebook = "https://www.facebook.com/rafinha"
+	twitter = "https://twitter.com/rafaelcapucho"
+	github = "https://github.com/rafaelcapucho"
+	disqus = "rafaelcapucho"
