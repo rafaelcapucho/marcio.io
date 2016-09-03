@@ -43,6 +43,7 @@ deploy-gh:
         git config --global user.email "rafael.capucho@gmail.com"
         git config --global user.name "Rafael Capucho"
         git remote add origin git@github.com:rafaelcapucho/rafaelcapucho.com.git
+        git fetch origin
         git branch --track master origin/master
         git status
         git add public --force
