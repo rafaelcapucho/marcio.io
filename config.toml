@@ -1,0 +1,25 @@
+baseurl = "http://rafaelcapucho.com"
+languageCode = "en-us"
+title = "rafaelcapucho.com"
+theme = "hyde"
+copyright = "Rafael Capucho"
+
+[Author]
+	name = "Rafael Capucho"
+
+[Permalinks]
+	blog = "/:year/:month/:filename/"
+	code = "/:filename/"
+
+[Taxonomies]
+	tag = "tags"
+	series = "series"
+	series-desc = "series-desc"
+
+[params]
+	description = "be welcome"
+	linkedin = "https://linkedin.com/in/rafaelcapucho"
+	#facebook = "https://www.facebook.com/rafinha"
+	#twitter = "https://twitter.com/rafaelcapucho"
+	github = "https://github.com/rafaelcapucho"
+	disqus = "rafaelcapucho"
