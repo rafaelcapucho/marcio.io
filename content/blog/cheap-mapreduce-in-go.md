@@ -75,35 +75,38 @@ For this particular job requirement, we needed to aggregate counts of the unique
 
 We wanted to ignore some fields in the JSON record, so we come up with a ```Telemetry``` structure that would map the fields that we would like to uniquely aggregate from. Here is what we came up with:
 
-```go
-type Telemetry struct {
-	Request struct {
-    	Sender  string `json:"Sender,omitempty"`
-    	Trigger string `json:"Trigger,omitempty"`
-    } `json:"Request,omitempty"`
+```python
+binary=False 
+lonum,hinum=1,128    
+ 
+import random as r
+ 
+the_num=r.randint(lonum,hinum)  
+print("I'm thinking of a number between",lonum,"and",hinum)
+ 
+lo=1
+hi=hinum
+guesses=0
+ 
+for i in range(lonum,hinum): 
+                                 
+    if binary:
+        guess=lo+(hi-lo)//2   
+    else:
+        guess=r.randint(lo,hi)
 
-	App struct {
-    	Program  string `json:"Program,omitempty"`
-    	Build    string `json:"Build,omitempty"`
-    	License  string `json:"License,omitempty"`
-    	Version  string `json:"Version,omitempty"`
-    } `json:"App,omitempty"`
-
-	Connection struct {
-    	Type string `json:"Type,omitempty"`
-    } `json:"Connection,omitempty"`
-
-	Region struct {
-    	Continent string `json:"Continent,omitempty"`
-    	Country   string `json:"Country,omitempty"`
-    } `json:"Region,omitempty"`
-
-	Client struct {
-    	OsVersion    string `json:"OsVersion,omitempty"`
-    	Language     string `json:"Language,omitempty"`
-    	Architecture string `json:"Architecture,omitempty"`
-    } `json:"Client,omitempty"`
-}
+    print("Guess:",guess)
+    guesses+=1                      
+                                    
+    if guess > the_num:
+        print("Lower!")
+        hi=guess                       
+    elif guess < the_num:
+        print("Higher!")
+        lo=guess                       
+    else: break                    
+ 
+print("That took",guesses,"guesses")
 ```
 
 So any permutation occurrence of any of these fields above, would generate a single line, with the correspondent occurrence count in the final output of our MapReduce.
