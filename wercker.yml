@@ -30,9 +30,8 @@ build:
 
 deploy-gh:
   steps:
-    - install-packages:
-      packages: git ssh-client
-    - lukevivier/gh-pages@0.2.1:
-      token: $GIT_TOKEN
+    - uetchy/gh-pages:
+      token: $GITHUB_TOKEN
+      repo: rafaelcapucho/rafaelcapucho.com
       domain: rafaelcapucho.github.com
       basedir: public
