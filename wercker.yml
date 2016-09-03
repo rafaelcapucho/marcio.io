@@ -39,6 +39,6 @@ deploy-gh:
         sudo apt-get -y install git-core
         git config --global user.email "rafael.capucho@gmail.com"
         git config --global user.name "Rafael Capucho"
-        git add public
+        git add public --force
         git commit -a -m "Wercker Commit"
         git push origin master
