@@ -40,6 +40,8 @@ deploy-gh:
         ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
         git config --global user.email "rafael.capucho@gmail.com"
         git config --global user.name "Rafael Capucho"
+        git status
         git add public --force
+        git status
         git commit -a -m "Wercker Commit"
         git push origin master
