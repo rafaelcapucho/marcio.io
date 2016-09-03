@@ -27,3 +27,12 @@ build:
       version: "0.16"
       theme: hyde
       flags: --buildDrafts=true
+
+deploy-gh:
+  steps:
+    - install-packages:
+      packages: git ssh-client
+    - lukevivier/gh-pages@0.2.1:
+      token: $GIT_TOKEN
+      domain: rafaelcapucho.github.com
+      basedir: public
