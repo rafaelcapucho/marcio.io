@@ -35,9 +35,9 @@ deploy-gh:
     - script:
       name: Configure Git
       code: |-
-        ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
         sudo apt-get -y update
-        sudo apt-get -y install git-core
+        sudo apt-get -y install ssh git-core
+        ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
         git config --global user.email "rafael.capucho@gmail.com"
         git config --global user.name "Rafael Capucho"
         git add public --force
