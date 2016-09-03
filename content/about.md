@@ -1,5 +1,5 @@
 +++
-date = 2015-07-05T10:15:00Z
+date = 2016-09-01
 title = "About me"
 
 [menu.main]
@@ -8,15 +8,20 @@ title = "About me"
 
 
 
-![headshot](/img/headshot.png)
+![headshot](/img/headshot.jpg)
 
-I work as the Principal Architect for Malwarebytes, helping our team fight computer malware and other really bad stuff.  I have been coding as far as I remember, about 30+ years ago. During my career I have been fortunate to work with many technologies, ranging from development environments based on MS-DOS, such as Clipper, DBase III+, Pascal, C/C++, and with most all of the great Windows based technologies in the years 1990's and 2000's, like Visual Basic, Visual C++, Borland Delphi, Borland C++, Kylix, Microsoft .NET C#. (Yeah I have missed the Java boat, fortunately)
+Hello World,
 
-For the last 10 years or so, I have been working mostly on the Mac OS X, developing software using Ruby on Rails, Objective-C and Swift, and Golang (Go) acting as an architect for very large web-based systems and mobile applications.
+I started to learn about programming when I was only 12 years old, self-taught, before I studied and graduated in Computer Science. Over the last 13 years I have been working on
+increasingly complex projects, mainly related to Distributed Systems, Web Crawlers and Servers, that way I gained a lot of experience with Big Data and Infrastructure.
 
-I am originally from Brazil and moved to the United States about 14 years ago. I used to publish a magazine in the late 90's called "Delphi Journal" with technical articles about Borland Delphi programming language.
+Over the last 13 years, I have been working with more than 20 languages, since 2008 mostly wih Python.
 
-This is my new spot to share my thoughts and findings about programming and interesting tidbits of technology.
+Beyond the fact that I am a backend architect I would say that I do both, my awesome frontend toolkit is composed mostly by ReactJS and SCSS.
 
-Thanks,  
-**Marcio Castilho**
+From lead developer to companies around the world, programing has no barriers.
+
+<a href="/files/resume.pdf">Check out my resume</a>.
+
+That is it for now,
+Thank you!

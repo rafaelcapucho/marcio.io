@@ -17,9 +17,9 @@ copyright = "Rafael Capucho"
 	series-desc = "series-desc"
 
 [params]
-	description = "stuff by Rafael Capucho"
+	description = "be welcome"
 	linkedin = "https://linkedin.com/in/rafaelcapucho"
-	facebook = "https://www.facebook.com/rafinha"
-	twitter = "https://twitter.com/rafaelcapucho"
+	#facebook = "https://www.facebook.com/rafinha"
+	#twitter = "https://twitter.com/rafaelcapucho"
 	github = "https://github.com/rafaelcapucho"
 	disqus = "rafaelcapucho"

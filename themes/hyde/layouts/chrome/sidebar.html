@@ -10,17 +10,25 @@
 
 
     <ul class="sidebar-nav">
-      <li><a href="{{.Site.BaseURL}}/blog">Posts</a></li>
-      {{ range .Site.Menus.main }}
-        <li><a href="{{.URL}}">{{ .Name }} </a></li>
-      {{end}}
-      <br/>
-      {{with .Site.Menus.code}}
-      <li>Code:</li>
-        {{ range . }}
-          <li><a href="{{.URL}}">{{ .Name }} </a></li>
+        <li><a href="{{.Site.BaseURL}}blog">Posts</a></li>
+        {{ range .Site.Menus.main }}
+            <li><a href="{{.URL}}">{{ .Name }} </a></li>
         {{end}}
-      {{end}}
+    
+        <br>
+
+        <li><small>My main open source project:</small></li>
+        <li><a href="http://github.com/rafaelcapucho/scrapy-eagle" target="_blank"><i class="fa fa-github-square"></i>&nbsp;Scrapy-Eagle</a></li>
+
+
+          <!--<br>
+          {{with .Site.Menus.testing}}
+          <li>Code:</li>
+            {{ range . }}
+              <li><a href="{{.URL}}">{{ .Name }} </a></li>
+            {{end}}
+          {{end}}-->
+
     </ul>
       {{ with .Site.Params.twitter }}<a href="{{.}}"><i class="fa fa-twitter-square"></i></a>&nbsp;&nbsp;{{end}}
       {{ with .Site.Params.linkedin }}<a href="{{.}}"><i class="fa fa-linkedin-square"></i></a>&nbsp;&nbsp;{{end}}
@@ -28,8 +36,8 @@
       {{ with .Site.Params.github }}<a href="{{.}}"><i class="fa fa-github-square"></i></a>&nbsp;&nbsp;{{end}}
       {{ with .Site.Params.gplus }}<a href="{{.}}"><i class="fa fa-google-plus"></i></a>{{end}}
 
-    <p class="footnote">powered by <a href="http://hugo.spf13.com">Hugo</a> <br/>
-    &copy; {{.Now.Format "2006"}} Marcio Castilho. All rights reserved.</p>
+    <p class="footnote">powered by <a href="http://hugo.spf13.com">Hugo</a> <br><br>
+    &copy; {{.Now.Format "2006"}} Rafael Capucho.<br>All rights reserved.</p>
 
   </div>
 </div>
@@ -37,7 +45,7 @@
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-242317-14']);
+  _gaq.push(['_setAccount', 'UA-9153202-1']);
   _gaq.push(['_trackPageview']);
 
   (function() {

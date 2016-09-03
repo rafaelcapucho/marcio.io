@@ -1,7 +1,7 @@
 +++
 date = "2015-07-05T06:26:13-05:00"
 title = "Markdown Pro"
-menu = "code"
+menu = "testing"
 +++
 
 I am also the author of Markdown Pro, the best markdown text editor for Mac OS X, providing real live-preview as you type and create your document, plus some elegant themes to preview your editing.
