@@ -24,6 +24,6 @@ build:
     # http://devcenter.wercker.com/docs/steps/index.html
   steps:
     - arjen/hugo-build:
-      version: "HEAD"
+      version: "0.16"
       theme: hyde
       flags: --buildDrafts=true
