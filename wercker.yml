@@ -30,8 +30,14 @@ build:
 
 deploy-gh:
   steps:
-    - uetchy/gh-pages:
-      token: $GITHUB_TOKEN
-      repo: rafaelcapucho/rafaelcapucho.com
-      domain: rafaelcapucho.github.com
-      basedir: public
+    - add-ssh-key:
+      keyname: DEPLOY_KEY
+    - script:
+      name: Configure Git
+      code: |-
+        sudo apt-get -y install git-core
+        git config --global user.email "rafael.capucho@gmail.com"
+        git config --global user.name "Rafael Capucho"
+        git add public
+        git commit -a -m "Wercker Commit"
+        git push origin master
