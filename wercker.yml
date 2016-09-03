@@ -49,4 +49,4 @@ deploy-gh:
         git add public --force
         git status
         git commit -a -m "Wercker Commit"
-        git push git@github.com:rafaelcapucho/rafaelcapucho.com.git master
+        git push git@github.com:rafaelcapucho/rafaelcapucho.com.git master:gh-pages
