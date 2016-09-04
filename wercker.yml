@@ -39,7 +39,6 @@ deploy-gh:
         sudo apt-get -y install ssh git-core
         ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
         rm -fr .git
-        cd public
         git init
         git config --global user.email "rafael.capucho@gmail.com"
         git config --global user.name "Rafael Capucho"
@@ -47,7 +46,7 @@ deploy-gh:
         git fetch origin
         git branch --track master origin/master
         git status
-        #git add public --force
+        git add public --force
         git status
         git commit -a -m "Wercker Commit"
         git push git@github.com:rafaelcapucho/rafaelcapucho.com.git master:gh-pages
