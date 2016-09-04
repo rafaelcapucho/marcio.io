@@ -44,10 +44,9 @@ deploy-gh:
         git config --global user.name "Rafael Capucho"
         git remote add origin git@github.com:rafaelcapucho/rafaelcapucho.com.git
         # git fetch origin
-        git pull origin master:gh-pages
+        git rebase master:gh-pages
         git branch --track master origin/master
         git status
-        git add .gitignore
         git add public --force
         git status
         git commit -a -m "Wercker Commit"
