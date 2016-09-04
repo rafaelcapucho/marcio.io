@@ -47,6 +47,7 @@ deploy-gh:
         git pull origin master:gh-pages
         git branch --track master origin/master
         git status
+        git add .gitignore
         git add public --force
         git status
         git commit -a -m "Wercker Commit"
