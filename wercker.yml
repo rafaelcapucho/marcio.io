@@ -38,11 +38,15 @@ deploy-gh:
         sudo apt-get -y update
         sudo apt-get -y install ssh git-core
         ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+        mv public /tmp/public
+        pwd
+        git branch --list -a
         rm -fr .git
         git init
         git config --global user.email "rafael.capucho@gmail.com"
         git config --global user.name "Rafael Capucho"
         git remote add origin git@github.com:rafaelcapucho/rafaelcapucho.com.git
+        git pull origin gh-pages
         git checkout gh-pages
         git pull origin gh-pages
         #git fetch origin
