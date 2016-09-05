@@ -20,7 +20,7 @@
 
 &lt;p&gt;Sometime ago, I was facing a &lt;em&gt;problem&lt;/em&gt; using MongoDB to perform heavy operations like Aggregations over a considerable amount of documents.&lt;/p&gt;
 
-&lt;p&gt;Fortunately, most of them were repeating, like when your projects are fetching contents from database to make the same menu structure, it don&amp;rsquo;t change every second.&lt;/p&gt;
+&lt;p&gt;Fortunately, most of them were repeating, like when your projects are fetching contents from database to make the same menu structure, it doesn&amp;rsquo;t change every second.&lt;/p&gt;
 
 &lt;p&gt;We already know how is the recipe to solve that: &lt;strong&gt;Cache it&lt;/strong&gt;.&lt;/p&gt;
 
@@ -79,7 +79,7 @@ main_loop.start()
 
 &lt;h2 id=&#34;the-mixin-code&#34;&gt;The Mixin Code&lt;/h2&gt;
 
-&lt;p&gt;With the connection available, it&amp;rsquo;s time to our Mixin.&lt;/p&gt;
+&lt;p&gt;With the connection available, it&amp;rsquo;s our Mixin time.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#!/usr/bin/env python
 # -*- coding: utf-8 -*-
@@ -209,9 +209,9 @@ class CacheHandler(tornado.web.RequestHandler, DBMixin):
 
 &lt;h2 id=&#34;how-it-works&#34;&gt;How it works?&lt;/h2&gt;
 
-&lt;p&gt;The code is simple, basically we can use Local Memory or a MongoDB table as cache, and we are able to choose which one by setting the argument &lt;code&gt;memory&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The code is simple, basically we can use Local Memory or a MongoDB table as cache, and we are able to choose which one of them by setting the argument &lt;code&gt;memory&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;Also, your handler should be using our Mixin, as example.&lt;/p&gt;
+&lt;p&gt;Also, your handler should be using our Mixin, as in the example.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class MainHandler(tornado.web.RequestHandler, CacheHandler):
 

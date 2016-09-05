@@ -120,7 +120,7 @@
 
 <p>Sometime ago, I was facing a <em>problem</em> using MongoDB to perform heavy operations like Aggregations over a considerable amount of documents.</p>
 
-<p>Fortunately, most of them were repeating, like when your projects are fetching contents from database to make the same menu structure, it don&rsquo;t change every second.</p>
+<p>Fortunately, most of them were repeating, like when your projects are fetching contents from database to make the same menu structure, it doesn&rsquo;t change every second.</p>
 
 <p>We already know how is the recipe to solve that: <strong>Cache it</strong>.</p>
 
@@ -179,7 +179,7 @@ main_loop.start()
 
 <h2 id="the-mixin-code">The Mixin Code</h2>
 
-<p>With the connection available, it&rsquo;s time to our Mixin.</p>
+<p>With the connection available, it&rsquo;s our Mixin time.</p>
 
 <pre><code class="language-python">#!/usr/bin/env python
 # -*- coding: utf-8 -*-
@@ -309,9 +309,9 @@ class CacheHandler(tornado.web.RequestHandler, DBMixin):
 
 <h2 id="how-it-works">How it works?</h2>
 
-<p>The code is simple, basically we can use Local Memory or a MongoDB table as cache, and we are able to choose which one by setting the argument <code>memory</code>.</p>
+<p>The code is simple, basically we can use Local Memory or a MongoDB table as cache, and we are able to choose which one of them by setting the argument <code>memory</code>.</p>
 
-<p>Also, your handler should be using our Mixin, as example.</p>
+<p>Also, your handler should be using our Mixin, as in the example.</p>
 
 <pre><code class="language-python">class MainHandler(tornado.web.RequestHandler, CacheHandler):
 
