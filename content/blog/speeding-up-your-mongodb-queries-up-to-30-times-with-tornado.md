@@ -8,7 +8,7 @@ ogtype = "article"
 
 Sometime ago, I was facing a *problem* using MongoDB to perform heavy operations like Aggregations over a considerable amount of documents.
 
-Fortunately, most of them were repeating, like when your projects are fetching contents from database to make the same menu structure, it don't change every second.
+Fortunately, most of them were repeating, like when your projects are fetching contents from database to make the same menu structure, it doesn't change every second.
 
 We already know how is the recipe to solve that: **Cache it**.
 
@@ -68,7 +68,7 @@ main_loop.start()
 
 ## The Mixin Code
 
-With the connection available, it's time to our Mixin.
+With the connection available, it's our Mixin time.
 
 
 ```python
@@ -200,9 +200,9 @@ class CacheHandler(tornado.web.RequestHandler, DBMixin):
 
 ## How it works?
 
-The code is simple, basically we can use Local Memory or a MongoDB table as cache, and we are able to choose which one by setting the argument `memory`.
+The code is simple, basically we can use Local Memory or a MongoDB table as cache, and we are able to choose which one of them by setting the argument `memory`.
 
-Also, your handler should be using our Mixin, as example.
+Also, your handler should be using our Mixin, as in the example.
 
 ```python
 class MainHandler(tornado.web.RequestHandler, CacheHandler):
