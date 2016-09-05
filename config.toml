@@ -1,4 +1,4 @@
-baseurl = "http://rafaelcapucho.com"
+baseurl = "https://rafaelcapucho.github.io"
 languageCode = "en-us"
 title = "rafaelcapucho.com"
 theme = "hyde"
