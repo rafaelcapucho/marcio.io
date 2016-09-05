@@ -23,7 +23,13 @@
     {{end}}
 
 
-    {{ .Content }}
+    {{ if .Truncated }}
+        {{ .Summary }}
+        <a href="{{ .RelPermalink }}">Read More…</a>
+    {{else}}
+        {{ .Content }}
+    {{end}}
+
   </div>
   {{end}}
   {{ end }}
