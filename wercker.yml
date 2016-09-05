@@ -41,18 +41,20 @@ deploy:
         mv public /tmp/public
         pwd
         git branch --list -a
-        rm -fr .git
-        git init
+        git checkout gh-pages
+        # rm -fr .git
+        # git init
         git config --global user.email "rafael.capucho@gmail.com"
         git config --global user.name "Rafael Capucho"
-        git remote add origin git@github.com:rafaelcapucho/rafaelcapucho.com.git
+        git pull origin master
+        # git remote add origin git@github.com:rafaelcapucho/rafaelcapucho.com.git
         git pull origin gh-pages
-        git checkout gh-pages
-        git pull origin gh-pages
+        git rm --force -r .
+        mv /tmp/public/* /pipeline/source/
         #git fetch origin
         #git branch --track master origin/master
         git status
         git add public --force
         git status
         git commit -a -m "Wercker Commit"
-        git push git@github.com:rafaelcapucho/rafaelcapucho.com.git gh-pages
+        git push origin gh-pages
