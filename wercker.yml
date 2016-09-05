@@ -46,6 +46,7 @@ deploy:
         git pull origin master
         git rm --force -r *
         mv /tmp/public/* /pipeline/source/
+        echo "box: wercker/default" > wercker.yml
         git status
         git add * --force
         git status
