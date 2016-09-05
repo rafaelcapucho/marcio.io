@@ -47,6 +47,11 @@ deploy:
         git rm --force -r *
         mv /tmp/public/* /pipeline/source/
         echo "box: wercker/default" > wercker.yml
+        echo "build:" >> wercker.yml
+        echo "  steps:" >> wercker.yml
+        echo "    - script:" >> wercker.yml
+        echo "      code: |-" >> wercker.yml
+        echo "        echo ok" >> wercker.yml
         git status
         git add * --force
         git status
