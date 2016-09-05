@@ -124,6 +124,8 @@
 
 <p>We have been using Amazon&rsquo;s Elastic MapReduce (EMR) in many different occasions, but we are always looking to simplify our systems wherever we can. Before I start another flame-war about this topic and why we decided to create a MapReduce job that runs in a single machine as oppose to a cluster of EC2 instances, let me explain. When creating complex systems that leverages a cluster of machines, it comes with a lot of extra costs from DevOps, IT, deployments and many other things that now we need to mantain and keep up-to-date. There are cases where we would like to churn over tons of data, but we don&rsquo;t need to be super fast, or leverage a huge complex infrastructure, therefore reducing lots of the costs and maintenance associated with it.</p>
 
+<!-- more -->
+
 <p>Other larger MapReduce jobs still runs within EMR, since we need more scalability and faster turn around times, and wouldn&rsquo;t be appropriate to be executed in a single machine.</p>
 
 <h3 id="the-goal">The Goal</h3>

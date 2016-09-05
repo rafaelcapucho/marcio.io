@@ -22,6 +22,8 @@
 
 &lt;p&gt;We have been using Amazon&amp;rsquo;s Elastic MapReduce (EMR) in many different occasions, but we are always looking to simplify our systems wherever we can. Before I start another flame-war about this topic and why we decided to create a MapReduce job that runs in a single machine as oppose to a cluster of EC2 instances, let me explain. When creating complex systems that leverages a cluster of machines, it comes with a lot of extra costs from DevOps, IT, deployments and many other things that now we need to mantain and keep up-to-date. There are cases where we would like to churn over tons of data, but we don&amp;rsquo;t need to be super fast, or leverage a huge complex infrastructure, therefore reducing lots of the costs and maintenance associated with it.&lt;/p&gt;
 
+&lt;!-- more --&gt;
+
 &lt;p&gt;Other larger MapReduce jobs still runs within EMR, since we need more scalability and faster turn around times, and wouldn&amp;rsquo;t be appropriate to be executed in a single machine.&lt;/p&gt;
 
 &lt;h3 id=&#34;the-goal&#34;&gt;The Goal&lt;/h3&gt;
@@ -1085,21 +1087,6 @@ func main() {
 &lt;p&gt;Of course that in a real-world scenario we wouldn&amp;rsquo;t be invoking the command line utility for every single file. This was just a simple example on how to write a little command line utility to demonstrate this approach. The real benefit is when we are traversing through millions of files and performing hash calculations using a single read pass through the contents file. This has a significant impact on our ability to fast go through our file repositories.&lt;/p&gt;
 
 &lt;p&gt;There are so many interesting functions and interfaces in the standard library that everyone should take look at the source code once in a while.&lt;/p&gt;
-</description>
-    </item>
-    
-    
-    
-    <item>
-      <title>compiling your go project under docker</title>
-      <link>https://rafaelcapucho.github.io/2015/07/compiling-your-go-project-under-docker/</link>
-      <pubDate>Tue, 07 Jul 2015 01:32:56 -0400</pubDate>
-      <author>Rafael Capucho</author>
-      <guid>https://rafaelcapucho.github.io/2015/07/compiling-your-go-project-under-docker/</guid>
-      <description>&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;brew install docker
-brew install docker-machine
-brew install docker-compose
-&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
