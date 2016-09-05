@@ -26,7 +26,7 @@ build:
     - arjen/hugo-build:
       version: "0.16"
       theme: hyde
-      flags: --buildDrafts=true
+      flags: --buildDrafts=false
 
 deploy:
   steps:

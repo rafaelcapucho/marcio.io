@@ -12,6 +12,8 @@ Here at [Malwarebytes](http://www.malwarebytes.org) we have to deal with a huge 
 
 We have been using Amazon's Elastic MapReduce (EMR) in many different occasions, but we are always looking to simplify our systems wherever we can. Before I start another flame-war about this topic and why we decided to create a MapReduce job that runs in a single machine as oppose to a cluster of EC2 instances, let me explain. When creating complex systems that leverages a cluster of machines, it comes with a lot of extra costs from DevOps, IT, deployments and many other things that now we need to mantain and keep up-to-date. There are cases where we would like to churn over tons of data, but we don't need to be super fast, or leverage a huge complex infrastructure, therefore reducing lots of the costs and maintenance associated with it.
 
+<!-- more -->
+
 Other larger MapReduce jobs still runs within EMR, since we need more scalability and faster turn around times, and wouldn't be appropriate to be executed in a single machine.
 
 ### The Goal
