@@ -8,7 +8,7 @@ ogtype = "article"
 
 Sometime ago, I was facing a *problem* using MongoDB to perform heavy operations like Aggregations over a considerable amount of documents.
 
-Fortunately, most of them were repeating, like when your projects are fetching contents from database to make the same menu structure and don't change every second.
+Fortunately, most of them were repeating, like when your projects are fetching contents from database to make the same menu structure, it don't change every second.
 
 We already know how is the recipe to solve that: **Cache it**.
 
