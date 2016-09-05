@@ -7,23 +7,329 @@
     <language>en-us</language>
     <author>Rafael Capucho</author>
     <copyright>2016 Rafael Capucho</copyright>
-    <updated>Thu, 01 Sep 2016 00:00:00 UTC</updated>
-    
-    
+    <updated>Mon, 05 Sep 2016 00:00:00 UTC</updated>
     
     
     <item>
-      <title>My First Post</title>
-      <link>https://rafaelcapucho.github.io/2015/07/my-first-post/</link>
-      <pubDate>Mon, 06 Jul 2015 15:57:30 -0400</pubDate>
+      <title>Speeding up your MongoDB queries up to 30 times with Tornado</title>
+      <link>https://rafaelcapucho.github.io/2016/09/speeding-up-your-mongodb-queries-up-to-30-times-with-tornado/</link>
+      <pubDate>Mon, 05 Sep 2016 00:00:00 UTC</pubDate>
       <author>Rafael Capucho</author>
-      <guid>https://rafaelcapucho.github.io/2015/07/my-first-post/</guid>
-      <description>&lt;p&gt;Testinggg&amp;hellip; 3&lt;/p&gt;
+      <guid>https://rafaelcapucho.github.io/2016/09/speeding-up-your-mongodb-queries-up-to-30-times-with-tornado/</guid>
+      <description>
+
+&lt;p&gt;Sometime ago, I was facing a &lt;em&gt;problem&lt;/em&gt; using MongoDB to perform heavy operations like Aggregations over a considerable amount of documents.&lt;/p&gt;
+
+&lt;p&gt;Fortunately, most of them were repeating, like when your projects are fetching contents from database to make the same menu structure and don&amp;rsquo;t change every second.&lt;/p&gt;
+
+&lt;p&gt;We already know how is the recipe to solve that: &lt;strong&gt;Cache it&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;I was using &lt;a href=&#34;http://www.tornadoweb.org&#34;&gt;Tornado&lt;/a&gt; and it&amp;rsquo;s common to use &lt;a href=&#34;https://github.com/mongodb/motor&#34;&gt;Motor&lt;/a&gt; to perform async database operations over MongoDB. The idea was to implement a Mixin that can be used in all handlers and support the three most common operations to get data:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Find&lt;/li&gt;
+&lt;li&gt;Find One&lt;/li&gt;
+&lt;li&gt;Aggregate&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Ok, let&amp;rsquo;s do it.&lt;/p&gt;
+
+&lt;h2 id=&#34;establishing-the-connection&#34;&gt;Establishing the connection&lt;/h2&gt;
+
+&lt;p&gt;We won&amp;rsquo;t need a lot of stuffs here, just the boilerplate.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import logging
+import motor
+
+from pymongo.errors import ConnectionFailure
+from tornado.options import define, options
+
+define(&amp;quot;mongo_host&amp;quot;, default=&amp;quot;mongodb://localhost:27017&amp;quot;, help=&amp;quot;mongodb://user:pass@localhost:27017&amp;quot;)
+define(&amp;quot;mongo_db&amp;quot;, default=&amp;quot;database_name&amp;quot;)
+
+def create_connection():
+    try:
+        return motor.MotorClient(options.mongo_host)[options.mongo_db]
+
+    except ConnectionFailure:
+        logging.error(&#39;Could not connect to Mongo DB. Exit&#39;)
+        exit(1)
+        return False
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we&amp;rsquo;re able to establish the connection and the object will be available through &lt;code&gt;self.application.db&lt;/code&gt; in every handler. Other aspects of the code like imports are omitted.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Application(tornado.web.Application):
+    def __init__(self):
+        handlers = [
+            (r&amp;quot;/?&amp;quot;, MainHandler),
+        ]
+
+        self.db = create_connection()
+
+        tornado.web.Application.__init__(self, handlers)
+
+http_server = tornado.httpserver.HTTPServer(Application())
+http_server.bind(options.port)
+http_server.start(1)
+
+main_loop = tornado.ioloop.IOLoop.instance()
+main_loop.start()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;the-mixin-code&#34;&gt;The Mixin Code&lt;/h2&gt;
+
+&lt;p&gt;With the connection available, it&amp;rsquo;s time to our Mixin.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from __future__ import print_function
+from __future__ import unicode_literals
+
+from hashlib import md5
+import datetime
+
+import tornado.web
+from tornado import gen
+from tornado.options import define, options
+
+from handlers import DBMixin
+
+define(&amp;quot;cache&amp;quot;, default=&amp;quot;True&amp;quot;, type=bool, help=&amp;quot;Enable/Disable the internal cache&amp;quot;)
+
+_cache = {}
+
+class DBMixin(object):
+    @property
+    def db(self): return self.application.db
+
+class CacheHandler(tornado.web.RequestHandler, DBMixin):
+    def __init__(self, *args, **kwargs):
+        super(CacheHandler, self).__init__(*args, **kwargs)
+        self.FIND_ONE = 1
+        self.FIND = 2
+        self.AGGREGATE = 3
+
+    @gen.coroutine
+    def cache(self, type, col, *args, **kwargs):
+
+        memory = kwargs.pop(&#39;memory&#39;, True) # Local Memory (Ram)
+        timeout = kwargs.pop(&#39;timeout&#39;, 60)
+        sort = kwargs.pop(&#39;sort&#39;, None)
+
+        # Union of every input
+        signature = str(type)+col+str(args)+str(kwargs)
+
+        # Generate a unique key 
+        key = md5(signature.encode(&#39;utf-8&#39;)).hexdigest()
+
+        @gen.coroutine
+        def get_key(key):
+
+            if not options.cache:
+                raise gen.Return(False)
+
+            if memory:
+                if _cache.get(key, False):
+                    raise gen.Return(_cache[key])
+                else:
+                    raise gen.Return(False)
+
+            else:
+                data = yield self.db[&#39;_cache&#39;].find_one({&#39;key&#39;: key})
+                raise gen.Return(data)
+
+        @gen.coroutine
+        def set_key(key, value):
+
+            delta = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+
+            if memory:
+                _cache[key] = {
+                    &#39;d&#39;: value,
+                    &#39;t&#39;: delta
+                }
+
+            else:
+                yield self.db[&#39;_cache&#39;].insert({
+                    &#39;key&#39;: key,
+                    &#39;d&#39;: value,
+                    &#39;t&#39;: delta
+                })
+
+        @gen.coroutine
+        def del_key(key):
+            if memory:
+                if _cache.get(key, False): del _cache[key]
+            else:
+                yield self.db[&#39;_cache&#39;].remove({&#39;key&#39;: key})
+
+        _key = yield get_key(key)
+
+        if _key:
+
+            # If the time in the future is still bigger than now
+            if _key[&#39;t&#39;] &amp;gt;= datetime.datetime.now():
+                raise gen.Return(_key[&#39;d&#39;])
+            else: # Invalid
+                yield del_key(key)
+
+        # otherwise (key not exist)
+        if type == self.FIND_ONE:
+
+            data = yield self.db[col].find_one(*args, **kwargs)
+
+        elif type == self.FIND:
+
+            if sort:
+                cursor = self.db[col].find(*args, **kwargs).sort(sort)
+            else:
+                cursor = self.db[col].find(*args, **kwargs)
+
+            data = yield cursor.to_list(kwargs.pop(&#39;to_list&#39;, None))
+
+        elif type == self.AGGREGATE:
+
+            cursor = self.db[col].aggregate(
+                kwargs.pop(&#39;pipeline&#39;, []),
+                *args,
+                cursor = kwargs.pop(&#39;cursor&#39;, {}),
+                **kwargs
+            )
+
+            data = yield cursor.to_list(kwargs.pop(&#39;to_list&#39;, None))
+
+        if options.cache:
+            # Persist the key
+            yield set_key(key, data)
+
+        raise gen.Return(data)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;how-it-works&#34;&gt;How it works?&lt;/h2&gt;
+
+&lt;p&gt;The code is simple, basically we can use Local Memory or a MongoDB table as cache, and we are able to choose which one by setting the argument &lt;code&gt;memory&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Also, your handler should be using our Mixin, as example.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class MainHandler(tornado.web.RequestHandler, CacheHandler):
+
+    @gen.coroutine
+    def get(self):
+
+        category = yield find_category_by_slug(&#39;electronic-gadgets&#39;)
+
+        self.render(&#39;index.html&#39;, {&#39;category&#39;: category})
+
+    @gen.coroutine
+    def find_category_by_slug(self, slug, filters={}):
+
+        defaults = {&#39;slug&#39;: slug}
+        defaults.update(filters)
+
+        category = yield self.cache(
+            self.FIND_ONE, # Type of query
+            &#39;categories&#39;,  # Name of the document
+            defaults,      # Conditions
+            memory=True,   # Store on python memory 
+            timeout=3600   # Expire in 1 hour
+        )
+
+        raise gen.Return(category)
+
+    @gen.coroutine
+    def find_categories(self, slug, filters={}):
+
+        categories = yield self.cache(
+            self.FIND,              # Type of query
+            &#39;categories&#39;,           # Name of the document
+            filters,                # Conditions
+            sort = [(&#39;order&#39;, 1)],  # Sort Criteria
+            memory = False,         # Store on db table
+            timeout = 86400,        # Expire in 1 day
+            to_list=50              # Return up to 50 items
+        )
+
+        raise gen.Return(categories)
+
+    @gen.coroutine
+    def complex_aggregation(self, category, sort, limit):
+
+        pipeline = [
+            {&#39;$match&#39;:
+                {&#39;cats_ids&#39;: {&#39;$all&#39;: [ ObjectId(category[&#39;_id&#39;]) ]}}
+            },
+            {&#39;$project&#39;: 
+                {&#39;products&#39;: 1, &#39;min_price&#39;: 1, &#39;max_price&#39;: 1, &#39;n_products&#39;: 1, &#39;_id&#39;: 1}
+            },
+            {&#39;$sort&#39;: sort },
+            {&#39;$skip&#39;: self.calculate_page_skip(limit=limit)},
+            {&#39;$limit&#39;: limit}
+        ]
+
+        groups = yield self.cache(
+            self.AGGREGATE,      # Type of query
+            &#39;products_groups&#39;,   # Name of the document
+            memory=False,        # Store on db table
+            pipeline=pipeline    # Operations
+        )
+
+        raise gen.Return(groups)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see, there are always an opportunity to enhance the performance.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://gist.github.com/rafaelcapucho/571a5ce63bc0fb0d4c43b445324ae58c&#34;&gt;Download the Gist&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;how-can-i-know-if-it-worth-the-price&#34;&gt;How can I know if it worth the price?&lt;/h3&gt;
+
+&lt;p&gt;It doesn&amp;rsquo;t count if you don&amp;rsquo;t see it, right? Ok, lets measure it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from __future__ import print_function
+from __future__ import unicode_literals
+
+import time
+
+class Timer(object):
+    def __init__(self, verbose=False, desc=&amp;quot;&amp;quot;):
+        self.verbose = verbose
+        self.desc = desc
+
+    def __enter__(self):
+        self.start = time.time()
+        return self
+
+    def __exit__(self, *args):
+        self.end = time.time()
+        self.secs = self.end - self.start
+        self.msecs = self.secs * 1000  # millisecs
+        if self.verbose:
+            if self.desc:
+                print(&#39;Time elapsed of {0} - &#39;.format(self.desc), end=&amp;quot;&amp;quot;)
+            print(&#39;{0:f} ms&#39;.format(self.msecs))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we are able to test it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;with Timer(True, desc=&#39;getting the category&#39;) as t:
+    category = yield self.cache(self.FIND_ONE, &#39;categories&#39;, {&#39;slug&#39;:&#39;cars&#39;}, memory=True)
+
+with Timer(True, desc=&#39;getting the category&#39;) as t:
+    category = yield self.db.categories.find_one({&#39;slug&#39;: &#39;cars&#39;})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I&amp;rsquo;m pretty sure that you will see the spent time near to 0ms with the cache.&lt;/p&gt;
 
 &lt;p&gt;Cheers,&lt;br /&gt;
 Rafael.&lt;/p&gt;
 </description>
     </item>
+    
+    
     
     
   </channel>
