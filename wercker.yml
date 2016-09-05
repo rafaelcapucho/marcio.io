@@ -46,7 +46,7 @@ deploy:
         git pull origin master
         git rm --force -r *
         mv /tmp/public/* /pipeline/source/
-        echo "box: wercker/default" > wercker.yml
+        echo "box: debian" > wercker.yml
         echo "build:" >> wercker.yml
         echo "  steps:" >> wercker.yml
         echo "    - script:" >> wercker.yml
