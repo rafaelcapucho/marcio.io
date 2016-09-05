@@ -49,7 +49,7 @@ deploy:
         git config --global user.name "Rafael Capucho"
         # git remote add origin git@github.com:rafaelcapucho/rafaelcapucho.com.git
         git pull origin gh-pages
-        git rm --force -r .
+        git rm --force -r *
         mv /tmp/public/* /pipeline/source/
         echo 'listando depois de mover' && ls 
         #git fetch origin
