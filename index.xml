@@ -20,7 +20,7 @@
 
 &lt;p&gt;Sometime ago, I was facing a &lt;em&gt;problem&lt;/em&gt; using MongoDB to perform heavy operations like Aggregations over a considerable amount of documents.&lt;/p&gt;
 
-&lt;p&gt;Fortunately, most of them were repeating, like when your projects are fetching contents from database to make the same menu structure and don&amp;rsquo;t change every second.&lt;/p&gt;
+&lt;p&gt;Fortunately, most of them were repeating, like when your projects are fetching contents from database to make the same menu structure, it don&amp;rsquo;t change every second.&lt;/p&gt;
 
 &lt;p&gt;We already know how is the recipe to solve that: &lt;strong&gt;Cache it&lt;/strong&gt;.&lt;/p&gt;
 
