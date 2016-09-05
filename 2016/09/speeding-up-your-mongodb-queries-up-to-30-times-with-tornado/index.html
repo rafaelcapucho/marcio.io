@@ -83,12 +83,12 @@
 
     </ul>
       
-      <a href="https://linkedin.com/in/rafaelcapucho"><i class="fa fa-linkedin-square"></i></a>&nbsp;&nbsp;
+      <a href="https://linkedin.com/in/rafaelcapucho" target="_blank"><i class="fa fa-linkedin-square"></i></a>&nbsp;&nbsp;
       
-      <a href="https://github.com/rafaelcapucho"><i class="fa fa-github-square"></i></a>&nbsp;&nbsp;
+      <a href="https://github.com/rafaelcapucho" target="_blank"><i class="fa fa-github-square"></i></a>&nbsp;&nbsp;
       
 
-    <p class="footnote">powered by <a href="http://hugo.spf13.com">Hugo</a> <br><br>
+    <p class="footnote">powered by <a href="http://hugo.spf13.com" target="_blank">Hugo</a> <br><br>
     &copy; 2016 Rafael Capucho.<br>All rights reserved.</p>
 
   </div>
@@ -415,10 +415,10 @@ class Timer(object):
 
 <p>Now we are able to test it.</p>
 
-<pre><code class="language-python">with Timer(True, desc='getting the category') as t:
+<pre><code class="language-python">with Timer(True, desc='getting the category with cache') as t:
     category = yield self.cache(self.FIND_ONE, 'categories', {'slug':'cars'}, memory=True)
 
-with Timer(True, desc='getting the category') as t:
+with Timer(True, desc='getting the category without cache') as t:
     category = yield self.db.categories.find_one({'slug': 'cars'})
 </code></pre>
 
