@@ -3,7 +3,7 @@
   <channel>
       <title>rafaelcapucho.com</title>
       <generator uri="https://hugo.spf13.com">Hugo</generator>
-    <link>http://rafaelcapucho.com/tags/thread-safety/</link>
+    <link>https://rafaelcapucho.github.io/tags/thread-safety/</link>
     <language>en-us</language>
     <author>Rafael Capucho</author>
     <copyright>2015 Rafael Capucho</copyright>
@@ -12,10 +12,10 @@
     
     <item>
       <title>Singleton Pattern in Go</title>
-      <link>http://rafaelcapucho.com/2015/07/singleton-pattern-in-go/</link>
+      <link>https://rafaelcapucho.github.io/2015/07/singleton-pattern-in-go/</link>
       <pubDate>Sun, 12 Jul 2015 13:50:25 -0400</pubDate>
       <author>Rafael Capucho</author>
-      <guid>http://rafaelcapucho.com/2015/07/singleton-pattern-in-go/</guid>
+      <guid>https://rafaelcapucho.github.io/2015/07/singleton-pattern-in-go/</guid>
       <description>
 
 &lt;p&gt;The Go Language growth has been phenomenal in the last few years, and is attracting language converts from all walks of life. There has been a lot articles recently about companies switching from Ruby, and experiencing the new world of Go and it&amp;rsquo;s parallel and concurrent approach to problems.&lt;/p&gt;
