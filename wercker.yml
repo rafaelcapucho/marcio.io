@@ -40,14 +40,14 @@ deploy:
         ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
         mv public /tmp/public
         git branch --list -a
-        git checkout gh-pages
+        git checkout master
         git config --global user.email "rafael.capucho@gmail.com"
         git config --global user.name "Rafael Capucho"
-        git pull origin gh-pages
+        git pull origin master
         git rm --force -r *
         mv /tmp/public/* /pipeline/source/
         git status
         git add * --force
         git status
         git commit -a -m "Wercker Commit"
-        git push origin gh-pages
+        git push origin master
