@@ -28,7 +28,7 @@ build:
       theme: hyde
       flags: --buildDrafts=true
 
-deploy-gh:
+deploy:
   steps:
     - add-ssh-key:
       keyname: DEPLOY_KEY
@@ -36,7 +36,7 @@ deploy-gh:
       name: Configure Git
       code: |-
         sudo apt-get -y update
-        sudo apt-get -y install ssh git-core
+        sudo apt-get -y install ssh-client git-core
         ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
         mv public /tmp/public
         pwd
