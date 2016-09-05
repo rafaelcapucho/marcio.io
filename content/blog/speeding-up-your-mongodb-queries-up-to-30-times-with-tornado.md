@@ -312,10 +312,10 @@ class Timer(object):
 Now we are able to test it.
 
 ```python
-with Timer(True, desc='getting the category') as t:
+with Timer(True, desc='getting the category with cache') as t:
     category = yield self.cache(self.FIND_ONE, 'categories', {'slug':'cars'}, memory=True)
 
-with Timer(True, desc='getting the category') as t:
+with Timer(True, desc='getting the category without cache') as t:
     category = yield self.db.categories.find_one({'slug': 'cars'})
 ```
 
