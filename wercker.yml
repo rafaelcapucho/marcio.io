@@ -55,7 +55,7 @@ deploy:
         #git fetch origin
         #git branch --track master origin/master
         git status
-        git add public --force
+        git add * --force
         git status
         git commit -a -m "Wercker Commit"
         git push origin gh-pages
