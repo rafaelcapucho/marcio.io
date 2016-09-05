@@ -46,7 +46,6 @@ deploy:
         # git init
         git config --global user.email "rafael.capucho@gmail.com"
         git config --global user.name "Rafael Capucho"
-        git pull origin master
         # git remote add origin git@github.com:rafaelcapucho/rafaelcapucho.com.git
         git pull origin gh-pages
         git rm --force -r .
