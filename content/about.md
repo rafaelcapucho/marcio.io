@@ -21,7 +21,7 @@ Beyond the fact that I am a backend architect I would say that I do both, my awe
 
 From lead developer to companies around the world, programing has no barriers.
 
-<a href="/files/resume.pdf">Check out my resume</a>.
+<a href="/files/resume.pdf" target="_blank">Check out my resume</a>.
 
 That is it for now,
 Thank you!
