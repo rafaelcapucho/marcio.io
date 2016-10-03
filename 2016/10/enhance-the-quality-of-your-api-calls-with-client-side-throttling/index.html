@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <meta property="og:title" content="Enhance the quality of your API calls with Client-Side Throttling" />
+<meta property="og:description" content="" />
+
+<meta property="og:type" content="article" />
+
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://rafaelcapucho.github.io/2016/10/enhance-the-quality-of-your-api-calls-with-client-side-throttling/" />
+
+
+
+  <title> Enhance the quality of your API calls with Client-Side Throttling  &middot; rafaelcapucho.com </title>
+
+  
+
+  <link rel="stylesheet" href="/css/monokai.css">
+  <script src="/js/highlight.pack.js"></script>
+
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  
+  <link rel="stylesheet" href="https://rafaelcapucho.github.io/css/poole.css">
+  <link rel="stylesheet" href="https://rafaelcapucho.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://rafaelcapucho.github.io/css/hyde.css">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="rafaelcapucho.com" />
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,300' rel='stylesheet' type='text/css'>
+
+  <script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+  <script>
+    WebFont.load({
+      google: {
+        families: ['Raleway']
+      }
+    });
+  </script>
+
+</head>
+
+<body>
+
+  <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1 class="brand"><a href="https://rafaelcapucho.github.io">rafaelcapucho.com</a></h1>
+      <p class="lead">
+       be welcome 
+      </p>
+    </div>
+
+
+
+    <ul class="sidebar-nav">
+        <li><a href="https://rafaelcapucho.github.io/blog">Posts</a></li>
+        
+            <li><a href="/about/">About me </a></li>
+        
+    
+        <br>
+
+        <li><small>My main open source project:</small></li>
+        <li><a href="http://github.com/rafaelcapucho/scrapy-eagle" target="_blank"><i class="fa fa-github-square"></i>&nbsp;Scrapy-Eagle</a></li>
+
+
+          
+
+    </ul>
+      
+      <a href="https://linkedin.com/in/rafaelcapucho" target="_blank"><i class="fa fa-linkedin-square"></i></a>&nbsp;&nbsp;
+      
+      <a href="https://github.com/rafaelcapucho" target="_blank"><i class="fa fa-github-square"></i></a>&nbsp;&nbsp;
+      
+
+    <p class="footnote">powered by <a href="http://hugo.spf13.com" target="_blank">Hugo</a> <br><br>
+    &copy; 2016 Rafael Capucho.<br>All rights reserved.</p>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9153202-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' :
+        'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
+
+</script>
+
+
+  <div class="content container">
+    <div class="post">
+    <h1 class="post-title">Enhance the quality of your API calls with Client-Side Throttling</h1>
+    <span class="post-date">Oct 2, 2016</span>
+    
+    
+
+<p>If you are a backend engineer and work with high load environment you <strong>should</strong> be familiarized with the old Server-Side Rate Limit, mainly for security concerns.</p>
+
+<p>Didn&rsquo;t you ever heard about Server-Side Rate Limit? It is a technique to limit the amount of requests that the server or API can handle in a defined period of time, and that limit can be set per user or not.</p>
+
+<p>Throttling is often used to limiting traffic on the server, mainly as a way to protect against <a href="https://en.wikipedia.org/wiki/Denial-of-service_attack">DOS Attack</a>. Additionally, it can also be used on the client-side, as this article describes.</p>
+
+<p>When a rate limit is exceeded, all requests are throttled and fail for a brief period of time or until the activities back to normal. Once throttled, the caller usually get the HTTP 403 (forbidden) status as response.</p>
+
+<p><img src="/img/client-side-throttling/Rate-Limit-and-Throttling-Graph.jpg" alt="Rate Limit &amp; Throttling Graph" /></p>
+
+<p>In the above picture, the user #3 are exceeding the global or individual rate limiting, being throttled to guarantee the quality of service and security.</p>
+
+<h2 id="just-reject-the-requests-is-enough">Just reject the requests is enough?</h2>
+
+<p>When a user is throttled, his next requests calls will be rejected. This behavior consumes significantly fewer resources than actually processing the requests and serving back correct responses.</p>
+
+<p>If a request were simple, like only retrieving information from local memory, it is almost equally expensive to reject it as it is to accept it and return the expected result.</p>
+
+<p>Additionally, we should consider that the server also allocates resources to receive the requests, establishing a complete TCP connection to finally reject them. Helping DDoS attackers.</p>
+
+<h2 id="big-mistake-when-consuming-apis">Big mistake when consuming APIs.</h2>
+
+<p>Consider that you are creating the new version of Facebook client, that makes periodics requests to Facebook API to collect news feed, comments, likes, online users etc.</p>
+
+<p>Almost everytime happens that unprepared clients, once throttled and getting rejected requests from API, keep making the same amount of requests, trying to reach the data.</p>
+
+<p>As result, the API keep blocking the user to maintain the overall quality of the service and your client could never retrieve the data as desired.</p>
+
+<h2 id="how-to-apply-client-side-throttling-with-adaptive-throttling">How to apply Client-Side Throttling with Adaptive Throttling?</h2>
+
+<p>When a client detects that a significant portion of its recent requests have been rejected, it starts self-regulating and caps the amount of outgoing traffic it generates.</p>
+
+<p>Requests above the cap should fail locally without even reaching the network.</p>
+
+<p><strong><em>Adaptive throttling</em></strong> is the key to solve the problem. To implement this technique the client needs to keep the following information for at least two minutes of its history:</p>
+
+<ul>
+<li><strong>Requests</strong>: The number of requests attempted by the application.</li>
+<li><strong>Accepts</strong>: The number of requests accepted by the backend.</li>
+</ul>
+
+<p>When everything is fine at the client, the two values are equal. Once the API start rejecting the client requests the number of <em>Accepts</em> becomes smaller than the number of <em>Requests</em>.</p>
+
+<p>The client app should still be able to issue requests to the API until the <strong>Requests</strong> be <strong>K</strong> times grather than <strong>Accepts</strong>, assuming K &gt; 1.</p>
+
+<p>For example, <strong>K = 1.1</strong> means that the client will allow one <em>Reject</em> for each 10 <em>Accepts</em>.</p>
+
+<p>Once the threshold is surpassed, which will happen when the state of the system meet the criteria <strong>Requests &gt; k * Accepts</strong>, the app should be able to self-regulate and new requests are now reject locally based on the probability P<sub>0</sub> described below.</p>
+
+<p><img src="/img/client-side-throttling/adaptative-throttling.jpg" alt="Adaptive throttling Probability" /></p>
+
+<p>Example, the client app performed <strong>1000 Requests</strong> in the last 2 minutes, with <strong>600 of them Accepted</strong>. Also, our system is designed to allow 4 rejects for each 10 requests which means that our <strong>K = 1.4</strong>.</p>
+
+<p>In the previous scenario the app should start regulating new request based on P<sub>0</sub> since the initial criteria is meet:</p>
+
+<p><img src="/img/client-side-throttling/initial-criteria.jpg" alt="Initial Criteria" /></p>
+
+<p>Since the client app is issuing more requests than our sample <strong>K</strong> allow, the app should reject new requests locally to the server with probability equal to 0.16, rejecting 16 requests in 100:</p>
+
+<p><img src="/img/client-side-throttling/probability-answer.jpg" alt="Probability Answer" /></p>
+
+<h2 id="the-problem-with-that-approach">The problem with that approach</h2>
+
+<p>The P<sub>0</sub> probability is originally defined in the Chapter 21 of the book <a href="https://www.amazon.com/Site-Reliability-Engineering-Production-Systems/dp/149192912X" target="_blank">Site Reliability Engineering: How Google Runs Production Systems</a> by, guess who? Google guys.</p>
+
+<p>The main goal is to increase the probability of dropping new requests, as soon as the server appears to be overloaded (assuming a small value  of <strong>K</strong>). Doing this, every client instance will help the server recover faster from the outage, by using less resources.</p>
+
+<p>Also, this approach is used in some Google services and they suggest K = 2, based on their own experiences.</p>
+
+<p>My concerns about this probability is that, if the server goes down for more than 2 minutes, the P<sub>0</sub> value will stand in 1, rejecting locally every new request to the server, so the client app won&rsquo;t be able to set up a new conection. As the result of it, the client app will never have another request reaching the server.</p>
+
+<p>I would like to suggest a new probability measure, P<sub>1</sub>, that upper limits the chance of rejecting a new request to 90%, allowing the client to recover even in that worst scenario, when the service is down more than 2 minutes.</p>
+
+<p><img src="/img/client-side-throttling/alternative-probability-measure.jpg" alt="Alternative Probability Measure" /></p>
+
+<p>I have noted that this technique can benefit client libraries and apps to enhance their own quality. Also, companies that offer comunication through APIs, in order to improve their own quality, should encourage client designers to use techniques like these.</p>
+
+<p>Cheers,<br>
+Rafael.</p>
+
+
+
+    
+
+    
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost")
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'rafaelcapucho-github-io';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the comments powered by <a href="http://disqus.com/?ref_noscript">Disqus.</a></noscript>
+
+</div>
+</div>
+
+</body>
+</html>

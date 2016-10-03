@@ -7,7 +7,99 @@
     <language>en-us</language>
     <author>Rafael Capucho</author>
     <copyright>2016 Rafael Capucho</copyright>
-    <updated>Mon, 05 Sep 2016 00:00:00 UTC</updated>
+    <updated>Sun, 02 Oct 2016 00:00:00 UTC</updated>
+    
+    
+    <item>
+      <title>Enhance the quality of your API calls with Client-Side Throttling</title>
+      <link>https://rafaelcapucho.github.io/2016/10/enhance-the-quality-of-your-api-calls-with-client-side-throttling/</link>
+      <pubDate>Sun, 02 Oct 2016 00:00:00 UTC</pubDate>
+      <author>Rafael Capucho</author>
+      <guid>https://rafaelcapucho.github.io/2016/10/enhance-the-quality-of-your-api-calls-with-client-side-throttling/</guid>
+      <description>
+
+&lt;p&gt;If you are a backend engineer and work with high load environment you &lt;strong&gt;should&lt;/strong&gt; be familiarized with the old Server-Side Rate Limit, mainly for security concerns.&lt;/p&gt;
+
+&lt;p&gt;Didn&amp;rsquo;t you ever heard about Server-Side Rate Limit? It is a technique to limit the amount of requests that the server or API can handle in a defined period of time, and that limit can be set per user or not.&lt;/p&gt;
+
+&lt;p&gt;Throttling is often used to limiting traffic on the server, mainly as a way to protect against &lt;a href=&#34;https://en.wikipedia.org/wiki/Denial-of-service_attack&#34;&gt;DOS Attack&lt;/a&gt;. Additionally, it can also be used on the client-side, as this article describes.&lt;/p&gt;
+
+&lt;p&gt;When a rate limit is exceeded, all requests are throttled and fail for a brief period of time or until the activities back to normal. Once throttled, the caller usually get the HTTP 403 (forbidden) status as response.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://rafaelcapucho.github.io/img/client-side-throttling/Rate-Limit-and-Throttling-Graph.jpg&#34; alt=&#34;Rate Limit &amp;amp; Throttling Graph&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In the above picture, the user #3 are exceeding the global or individual rate limiting, being throttled to guarantee the quality of service and security.&lt;/p&gt;
+
+&lt;h2 id=&#34;just-reject-the-requests-is-enough&#34;&gt;Just reject the requests is enough?&lt;/h2&gt;
+
+&lt;p&gt;When a user is throttled, his next requests calls will be rejected. This behavior consumes significantly fewer resources than actually processing the requests and serving back correct responses.&lt;/p&gt;
+
+&lt;p&gt;If a request were simple, like only retrieving information from local memory, it is almost equally expensive to reject it as it is to accept it and return the expected result.&lt;/p&gt;
+
+&lt;p&gt;Additionally, we should consider that the server also allocates resources to receive the requests, establishing a complete TCP connection to finally reject them. Helping DDoS attackers.&lt;/p&gt;
+
+&lt;h2 id=&#34;big-mistake-when-consuming-apis&#34;&gt;Big mistake when consuming APIs.&lt;/h2&gt;
+
+&lt;p&gt;Consider that you are creating the new version of Facebook client, that makes periodics requests to Facebook API to collect news feed, comments, likes, online users etc.&lt;/p&gt;
+
+&lt;p&gt;Almost everytime happens that unprepared clients, once throttled and getting rejected requests from API, keep making the same amount of requests, trying to reach the data.&lt;/p&gt;
+
+&lt;p&gt;As result, the API keep blocking the user to maintain the overall quality of the service and your client could never retrieve the data as desired.&lt;/p&gt;
+
+&lt;h2 id=&#34;how-to-apply-client-side-throttling-with-adaptive-throttling&#34;&gt;How to apply Client-Side Throttling with Adaptive Throttling?&lt;/h2&gt;
+
+&lt;p&gt;When a client detects that a significant portion of its recent requests have been rejected, it starts self-regulating and caps the amount of outgoing traffic it generates.&lt;/p&gt;
+
+&lt;p&gt;Requests above the cap should fail locally without even reaching the network.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Adaptive throttling&lt;/em&gt;&lt;/strong&gt; is the key to solve the problem. To implement this technique the client needs to keep the following information for at least two minutes of its history:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Requests&lt;/strong&gt;: The number of requests attempted by the application.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Accepts&lt;/strong&gt;: The number of requests accepted by the backend.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;When everything is fine at the client, the two values are equal. Once the API start rejecting the client requests the number of &lt;em&gt;Accepts&lt;/em&gt; becomes smaller than the number of &lt;em&gt;Requests&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;The client app should still be able to issue requests to the API until the &lt;strong&gt;Requests&lt;/strong&gt; be &lt;strong&gt;K&lt;/strong&gt; times grather than &lt;strong&gt;Accepts&lt;/strong&gt;, assuming K &amp;gt; 1.&lt;/p&gt;
+
+&lt;p&gt;For example, &lt;strong&gt;K = 1.1&lt;/strong&gt; means that the client will allow one &lt;em&gt;Reject&lt;/em&gt; for each 10 &lt;em&gt;Accepts&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Once the threshold is surpassed, which will happen when the state of the system meet the criteria &lt;strong&gt;Requests &amp;gt; k * Accepts&lt;/strong&gt;, the app should be able to self-regulate and new requests are now reject locally based on the probability P&lt;sub&gt;0&lt;/sub&gt; described below.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://rafaelcapucho.github.io/img/client-side-throttling/adaptative-throttling.jpg&#34; alt=&#34;Adaptive throttling Probability&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Example, the client app performed &lt;strong&gt;1000 Requests&lt;/strong&gt; in the last 2 minutes, with &lt;strong&gt;600 of them Accepted&lt;/strong&gt;. Also, our system is designed to allow 4 rejects for each 10 requests which means that our &lt;strong&gt;K = 1.4&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;In the previous scenario the app should start regulating new request based on P&lt;sub&gt;0&lt;/sub&gt; since the initial criteria is meet:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://rafaelcapucho.github.io/img/client-side-throttling/initial-criteria.jpg&#34; alt=&#34;Initial Criteria&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Since the client app is issuing more requests than our sample &lt;strong&gt;K&lt;/strong&gt; allow, the app should reject new requests locally to the server with probability equal to 0.16, rejecting 16 requests in 100:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://rafaelcapucho.github.io/img/client-side-throttling/probability-answer.jpg&#34; alt=&#34;Probability Answer&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;the-problem-with-that-approach&#34;&gt;The problem with that approach&lt;/h2&gt;
+
+&lt;p&gt;The P&lt;sub&gt;0&lt;/sub&gt; probability is originally defined in the Chapter 21 of the book &lt;a href=&#34;https://www.amazon.com/Site-Reliability-Engineering-Production-Systems/dp/149192912X&#34; target=&#34;_blank&#34;&gt;Site Reliability Engineering: How Google Runs Production Systems&lt;/a&gt; by, guess who? Google guys.&lt;/p&gt;
+
+&lt;p&gt;The main goal is to increase the probability of dropping new requests, as soon as the server appears to be overloaded (assuming a small value  of &lt;strong&gt;K&lt;/strong&gt;). Doing this, every client instance will help the server recover faster from the outage, by using less resources.&lt;/p&gt;
+
+&lt;p&gt;Also, this approach is used in some Google services and they suggest K = 2, based on their own experiences.&lt;/p&gt;
+
+&lt;p&gt;My concerns about this probability is that, if the server goes down for more than 2 minutes, the P&lt;sub&gt;0&lt;/sub&gt; value will stand in 1, rejecting locally every new request to the server, so the client app won&amp;rsquo;t be able to set up a new conection. As the result of it, the client app will never have another request reaching the server.&lt;/p&gt;
+
+&lt;p&gt;I would like to suggest a new probability measure, P&lt;sub&gt;1&lt;/sub&gt;, that upper limits the chance of rejecting a new request to 90%, allowing the client to recover even in that worst scenario, when the service is down more than 2 minutes.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://rafaelcapucho.github.io/img/client-side-throttling/alternative-probability-measure.jpg&#34; alt=&#34;Alternative Probability Measure&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I have noted that this technique can benefit client libraries and apps to enhance their own quality. Also, companies that offer comunication through APIs, in order to improve their own quality, should encourage client designers to use techniques like these.&lt;/p&gt;
+
+&lt;p&gt;Cheers,&lt;br&gt;
+Rafael.&lt;/p&gt;
+</description>
+    </item>
+    
     
     
     <item>
