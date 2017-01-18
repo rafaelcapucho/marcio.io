@@ -1,5 +1,5 @@
 +++
-date = 2016-09-01
+date = "2017-01-18"
 title = "About me"
 
 [menu.main]
@@ -12,12 +12,11 @@ title = "About me"
 
 Hello World,
 
-I started to learn about programming when I was only 12 years old, self-taught, before I studied and graduated in Computer Science. Over the last 13 years I have been working on
-increasingly complex projects, mainly related to Distributed Systems, Web Crawlers and Servers, that way I gained a lot of experience with Big Data and Infrastructure.
+I started to learn about programming when I was only 12 years old, self-taught, before I graduated in Computer Science. Over the last 13 years I have been working on increasingly complex projects, mainly related to Distributed Systems, Web Crawlers and Servers, that way I gained a lot of experience with Big Data and Infrastructure, since 2008 mostly with Python.
 
-Over the last 13 years, I have been working with more than 20 languages, since 2008 mostly wih Python.
+Beyond the fact that I am a backend architect I would say that I do both, my frontend toolkit is composed mostly by ReactJS and SCSS.
 
-Beyond the fact that I am a backend architect I would say that I do both, my awesome frontend toolkit is composed mostly by ReactJS and SCSS.
+I work with Python at <a href="http://www.famoco.com" target="_blank">Famoco</a>, Belgium.
 
 From lead developer to companies around the world, programing has no barriers.
 
