@@ -3,7 +3,12 @@
   
   <url>
     <loc>https://rafaelcapucho.github.io/</loc>
-    <lastmod>2016-10-02T00:00:00+00:00</lastmod>
+    <lastmod>2017-01-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://rafaelcapucho.github.io/about/</loc>
+    <lastmod>2017-01-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -14,11 +19,6 @@
   <url>
     <loc>https://rafaelcapucho.github.io/2016/09/speeding-up-your-mongodb-queries-up-to-30-times-with-tornado/</loc>
     <lastmod>2016-09-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://rafaelcapucho.github.io/about/</loc>
-    <lastmod>2016-09-01T00:00:00+00:00</lastmod>
   </url>
   
 </urlset>
